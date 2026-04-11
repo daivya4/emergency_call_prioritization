@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Call Dispatch Simulator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="glass-container">
+        <header>
+            <h1>Emergency Intelligence Simulator</h1>
+            <p>Speak or Type your dispatch scenario to evaluate criticality.</p>
+        </header>
+        
+        <div class="input-section">
+            <textarea id="transcriptInput" placeholder="E.g., We have a massive building fire on 5th avenue! Send units immediately!"></textarea>
+            
+            <div class="controls">
+                <button id="recordBtn" class="btn btn-glow">🎙️ Record Voice</button>
+                <button id="analyzeBtn" class="btn btn-primary">Process Signal</button>
+            </div>
+            <p id="speechStatus" class="status-msg"></p>
+        </div>
+
+        <div class="results-section hidden" id="resultsPanel">
+            <h2 id="priorityLabel">PROCESSING...</h2>
+            
+            <div class="meters">
+                <div class="meter-row">
+                    <span class="label-critical">Critical Risk</span>
+                    <div class="bar-bg">
+                        <div class="bar-fill bar-critical" id="barCritical"></div>
+                    </div>
+                    <span class="percent" id="pctCritical">0%</span>
+                </div>
+                
+                <div class="meter-row">
+                    <span class="label-normal">Normal Action</span>
+                    <div class="bar-bg">
+                        <div class="bar-fill bar-normal" id="barNormal"></div>
+                    </div>
+                    <span class="percent" id="pctNormal">0%</span>
+                </div>
+            </div>
+            
+            <div class="latency-info">
+                Latency: <span id="latencyValue">0 ms</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
