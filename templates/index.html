@@ -55,6 +55,51 @@
                 Latency: <span id="latencyValue">0 ms</span>
             </div>
         </div>
+
+        <div class="assistant-panel hidden" id="assistantPanel">
+            <div class="assistant-header">
+                <span class="assistant-icon">🤖</span>
+                <h3>Emergency Assistant</h3>
+            </div>
+            <p id="assistantMessage" class="assistant-message"></p>
+            
+            <div id="medicalWidget" class="widget hidden">
+                <label for="citySelect" class="widget-label">Select City for Hospitals:</label>
+                <div class="select-wrapper">
+                    <select id="citySelect">
+                        <option value="Bengaluru" selected>Bengaluru</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Chennai">Chennai</option>
+                        <option value="Ahmedabad">Ahmedabad</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Kolkata">Kolkata</option>
+                        <option value="Jaipur">Jaipur</option>
+                        <option value="Surat">Surat</option>
+                    </select>
+                </div>
+                <div id="hospitalList" class="hospital-list">
+                    <!-- Hospitals populated via JS -->
+                </div>
+            </div>
+
+            <div id="fireWidget" class="widget hidden">
+                <div class="emergency-number-card">
+                    <span class="number-title">Fire Emergency Dial</span>
+                    <div class="number-display">101 <span class="or-text">or</span> 112</div>
+                    <button class="btn btn-copy" onclick="copyToClipboard('101')">📋 Copy Number</button>
+                </div>
+            </div>
+
+            <div id="policeWidget" class="widget hidden">
+                <div class="emergency-number-card">
+                    <span class="number-title">Police Emergency Dial</span>
+                    <div class="number-display">100 <span class="or-text">or</span> 112</div>
+                    <button class="btn btn-copy" onclick="copyToClipboard('100')">📋 Copy Number</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>

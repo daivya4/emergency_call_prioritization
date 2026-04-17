@@ -2,8 +2,25 @@ from flask import Flask, request, jsonify, render_template
 import joblib
 import time
 import os
+import re
 
 app = Flask(__name__)
+
+def categorize_emergency(transcript):
+    transcript_lower = transcript.lower()
+    
+    medical_keywords = ['medical', 'ambulance', 'breathing', 'unconscious', 'heart', 'stroke', 'bleeding', 'pain', 'hospital', 'choking', 'swallowed', 'blue', 'collapse', 'poison', 'cpr', 'seizure', 'pregnant', 'baby']
+    fire_keywords = ['fire', 'burn', 'smoke', 'blaze', 'flames', 'explosion']
+    police_keywords = ['police', 'accident', 'crash', 'robbery', 'thief', 'gun', 'murder', 'assault', 'fight', 'break in', 'intruder', 'trespassing', 'domestic', 'kidnap', 'shooting']
+    
+    if any(re.search(r'\b' + kw + r'\b', transcript_lower) for kw in medical_keywords):
+        return 'medical'
+    if any(re.search(r'\b' + kw + r'\b', transcript_lower) for kw in fire_keywords):
+        return 'fire'
+    if any(re.search(r'\b' + kw + r'\b', transcript_lower) for kw in police_keywords):
+        return 'police'
+    return 'other'
+
 
 # Paths for models
 MODEL_DIR = os.path.join(os.path.dirname(__file__), 'models')
@@ -48,6 +65,9 @@ def predict():
     # We used an optimized threshold of 0.3 for >0.95 recall
     is_critical = bool(critical_prob >= 0.3)
     
+    # Categorize emergency
+    category = categorize_emergency(transcript)
+    
     end_time = time.time()
     latency_ms = (end_time - start_time) * 1000
 
@@ -55,7 +75,8 @@ def predict():
         "critical": is_critical,
         "critical_confidence": float(critical_prob),
         "non_critical_confidence": float(non_critical_prob),
-        "latency_ms": round(latency_ms, 2)
+        "latency_ms": round(latency_ms, 2),
+        "category": category
     })
 
 if __name__ == '__main__':
