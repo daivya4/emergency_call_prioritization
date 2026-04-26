@@ -9,7 +9,7 @@ app = Flask(__name__)
 def categorize_emergency(transcript):
     transcript_lower = transcript.lower()
     
-    medical_keywords = ['medical', 'ambulance', 'breathing', 'unconscious', 'heart', 'stroke', 'bleeding', 'pain', 'hospital', 'choking', 'swallowed', 'blue', 'collapse', 'poison', 'cpr', 'seizure', 'pregnant', 'baby']
+    medical_keywords = ['medical', 'ambulance', 'breathing', 'breathe', 'unconscious', 'heart', 'stroke', 'bleeding', 'pain', 'hurts', 'hurt', 'hospital', 'choking', 'swallowed', 'blue', 'collapse', 'poison', 'cpr', 'seizure', 'pregnant', 'baby', 'chest', 'dizzy', 'sweating', 'suicide', 'live anymore']
     fire_keywords = ['fire', 'burn', 'smoke', 'blaze', 'flames', 'explosion']
     police_keywords = ['police', 'accident', 'crash', 'robbery', 'thief', 'gun', 'murder', 'assault', 'fight', 'break in', 'intruder', 'trespassing', 'domestic', 'kidnap', 'shooting']
     
@@ -64,6 +64,17 @@ def predict():
     
     # We used an optimized threshold of 0.3 for >0.95 recall
     is_critical = bool(critical_prob >= 0.3)
+    
+    # Override for obvious non-critical complaints (e.g., loud music)
+    transcript_lower = transcript.lower()
+    
+    high_priority_keywords = ['flood', 'flooding', 'rescue', 'trapped', 'stranded', 'drowning', 'tornado', 'earthquake', 'gunshots', 'shots', 'screaming', 'hiding', 'break in', 'broke in', 'intruder', 'robbery', 'scared', 'weapon', 'suicide', 'live anymore', 'hurt himself', 'hurt herself', 'hurt myself']
+    if any(re.search(r'\b' + kw + r'\b', transcript_lower) for kw in high_priority_keywords):
+        is_critical = True
+        
+    low_priority_keywords = ['loud music', 'music', 'noise', 'party', 'barking', 'parking']
+    if any(re.search(r'\b' + kw + r'\b', transcript_lower) for kw in low_priority_keywords):
+        is_critical = False
     
     # Categorize emergency
     category = categorize_emergency(transcript)
